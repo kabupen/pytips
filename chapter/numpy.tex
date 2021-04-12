@@ -1,0 +1,178 @@
+
+\chapter{NumPy}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+  import numpy as np
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+  ary.ndim     
+  ary.size
+  ary.shape
+  ary.shape[0]
+  ary.shape[1]
+\end{minted}
+
+
+\section{様々な初期化メソッド}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+  >>> np.ones([3,3])
+  array([[1., 1., 1.],
+       [1., 1., 1.],
+       [1., 1., 1.]])
+\end{minted}
+
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+  >>> np.zeros([3,3])
+  array([[0., 0., 0.],
+       [0., 0., 0.],
+       [0., 0., 0.]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+  >>> np.eye(3)
+  array([[1., 0., 0.],
+       [0., 1., 0.],
+       [0., 0., 1.]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+  >>> np.diag([3,3,3])
+  array([[3, 0, 0],
+       [0, 3, 0],
+       [0, 0, 3]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+  >>> np.arange(4,10)
+  array([4, 5, 6, 7, 8, 9])
+
+  >>> np.arange(5)
+  array([0, 1, 2, 3, 4])
+
+  >>> np.arange(1,10,1)
+  array([1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+  >>> np.linspace(0,10,5)
+  array([ 0. ,  2.5,  5. ,  7.5, 10. ])
+\end{minted}
+
+
+\section{要素同士の演算}
+{\tt ndarray}の基本は多次元配列であり、各要素に対して演算させることができる。
+基本の四則演算に加えて、{\tt ufunc}も各要素に対して使用することができる。
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1 = np.array([[1,2,3],[4,5,6]])
+>>> ary2 = np.array([[7,8,9],[10,11,12]])
+>>> ary1 + ary2
+array([[ 8, 10, 12],
+       [14, 16, 18]])
+\end{minted}
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1 - ary2
+array([[-6, -6, -6],
+       [-6, -6, -6]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1 * ary2
+array([[ 7, 16, 27],
+       [40, 55, 72]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1 / ary2
+array([[0.14285714, 0.25      , 0.33333333],
+       [0.4       , 0.45454545, 0.5       ]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1**2
+array([[ 1,  4,  9],
+       [16, 25, 36]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> np.log(ary1)
+array([[0.        , 0.69314718, 1.09861229],
+       [1.38629436, 1.60943791, 1.79175947]])
+\end{minted}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> np.sqrt(ary1)
+array([[1.        , 1.41421356, 1.73205081],
+       [2.        , 2.23606798, 2.44948974]])
+\end{minted}
+
+行列としての演算を行うためには、明示的に関数を使用する必要がある\footnote{
+注意しなければならないのは、便利な{\tt broadcast}等の機能があるにせよ、
+行列計算を行うためには、正しく数学上の規則にのっとる必要がある。
+例えば上記の{\tt ary1}と{\tt ary2}をそのまま内積計算させると
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> np.dot(ary1, ary2)
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "<__array_function__ internals>", line 6, in dot
+ValueError: shapes (2,3) and (2,3) not aligned: 3 (dim 1) != 2 (dim 0)
+\end{minted}
+
+となり、$2\times 3$行列と$2\times 3$行列の積は定義できないとエラーがでる。}。
+
+{\tt array}は各要素の和も取ることができる。
+また{\tt axis}を指定することで、行方向への和({\tt axis=1})、列方向への和({\tt axis=0})も計算することができる。
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1.sum()
+21
+>>> ary1.sum(axis=0)
+array([5, 7, 9])
+>>> ary1.sum(axis=1)
+array([ 6, 15])
+\end{minted}
+
+
+\section{配列の情報}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1.ndim
+2
+>>> ary1.size
+6
+>>> ary1.shape
+(2, 3)
+>>> ary1.shape[0]
+2
+>>> ary1.shape[1]
+3
+\end{minted}
+
+\section{{\tt ufuncs}まとめ}
+
+\begin{minted}[linenos,fontfamily=courier]{python}
+>>> ary1.std()
+1.707825127659933
+>>> ary1.var()
+2.9166666666666665
+>>> np.sort(ary1)
+array([[1, 2, 3],
+       [4, 5, 6]])
+       
+# 要素の中の最小値
+>>> np.min(ary1)
+1
+# 要素の中の最小値のインデックス
+>>> np.argmin(ary1)
+0
+# 要素の中の最大値
+>>> np.max(ary1)
+6
+# 要素の中の最大値のインデックス
+>>> np.argmax(ary1)
+5
+\end{minted}
+
+
