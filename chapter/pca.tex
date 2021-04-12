@@ -1,0 +1,96 @@
+
+\chapter{主成分分析}
+
+高次元のデータを圧縮するために用いられる手法で、教師なし次元削減の一つである。
+データを特徴づけるために測定した変数（身長、体重、年齢、etc）が余りにも多い場合、
+そのまま全てを使用して計算を進めるのは非効率とも言える。
+そこで重要なのが次元の削減であり、その指標の一つが主成分分析（Principal Component Analysis; PCA）である。
+PCAでは多次元空間の中で、最も分散が大きくなるような"軸"を選び出し、解析を行っていく。
+
+\section{主成分の抽出}
+
+簡単のために、2次元のデータを考える\footnote{視覚化したいので、世の中に溢れているのはせいぜい3次元までの説明。4次元以上になると視覚的に捉えることができないので、ここでも扱わない。}。
+\begin{equation}
+  X=
+    \left(
+  \begin{array}{cc}
+    x_1^{(1)} & x_2^{(1)} \\
+    x_1^{(2)} & x_2^{(2)} \\
+    \vdots    & \vdots    \\
+    x_1^{(n)} & x_2^{(n)} \\
+  \end{array}
+  \right) \\
+\end{equation}
+具体的に理解するのであれば、1列目が身長・2列目が体重を表していると思えばよく、
+また行は1人目、2人目...のようにデータの個数を表していると思えば良い。
+PCAの導入で説明したように、$n$点のデータの分散が最も大きい軸を探し出せば良い。
+
+軸は次のように表すことができる\footnote{分かりづらければ、$ax+by$と考えても良い}:
+\begin{equation}
+  f(x_1, x_2) = x_1a_1 + x_2a_2
+\end{equation}
+PCAの手順で求められているのは、全てのデータをこの$f(x_1, x_2)$上に射影してきて、そこでのデータ点の分散が
+最大となるように$\bm{a}=(a_1,~a_2)$を求めるということである。
+この軸はデータ点との線形結合であるので、全データを射影した先の情報は次のように書き表すことができる。
+\begin{eqnarray}
+  X\bm{a} &=&
+    \left(
+  \begin{array}{cc}
+    x_1^{(1)} & x_2^{(1)} \\
+    x_1^{(2)} & x_2^{(2)} \\
+    \vdots    & \vdots    \\
+    x_1^{(n)} & x_2^{(n)} \\
+  \end{array}
+  \right)
+    \left(
+  \begin{array}{c}
+    a_1 \\
+    a_2 
+  \end{array}
+  \right) \\
+  &=&
+  \left(
+  \begin{array}{c}
+    x_1^{(1)}a_1 + x_2^{(1)}a_2 \\
+    x_1^{(2)}a_1 + x_2^{(2)}a_2 \\
+    \vdots      \\
+    x_1^{(n)}a_1 + x_2^{(n)}a_2 \\
+  \end{array}
+  \right)
+\end{eqnarray}
+$X\bm{a}$は軸に射影後の$n$点のデータを表しており、あとはこれらの分散が最大となる$\bm{a}$を求めれば良い。
+$X\bm{a}$の分散は、
+\begin{eqnarray}
+  \mathrm{var}(X\bm{a}) &=& \frac{1}{n} \left(X\bm{a} -\overline{X\bm{a}} \right)^\mathrm{T} \left(X\bm{a}-\overline{X\bm{a}} \right) \\
+  &=& \frac{1}{n} \left(X\bm{a} -\overline{X}\bm{a} \right)^\mathrm{T} \left(X\bm{a}-\overline{X}\bm{a} \right) \\
+  &=& \frac{1}{n} \left((X -\overline{X})\bm{a} \right)^\mathrm{T} \left((X-\overline{X})\bm{a} \right) \\
+  &=& \frac{1}{n} \bm{a}^\mathrm{T}\left((X -\overline{X}) \right)^\mathrm{T} \left((X-\overline{X})\right)\bm{a}  \\
+  &=& \bm{a}^\mathrm{T} S \bm{a}  
+\end{eqnarray}
+最後の$S$はデータ$X$の分散共分散行列である。
+命題は、$\bm{a}^\mathrm{T} S \bm{a}$を最大とする$\bm{a}$を求めればよいということに置き換えることができる。
+ここで、一般的な条件として、
+\begin{equation}
+  \bm{a}^\mathrm{T}\bm{a}=1 \Leftrightarrow \bm{a}^\mathrm{T}\bm{a}-1=0
+\end{equation}
+を課す。この条件のもとで、ラグランジュの未定乗数法を用いると
+\begin{eqnarray}
+  L &=& \bm{a}^T S\bm{a} -\lambda(\bm{a}^T \bm{a}-1) \\
+    &=& \bm{a}^T \left( S\bm{a} -\lambda\bm{a} \right) + \lambda 
+\end{eqnarray}
+$L$を$\bm{a}^T$で偏微分すれば最大化の条件として、
+\begin{eqnarray}
+    S\bm{a} -\lambda\bm{a} = 0 \\
+    \Leftrightarrow S\bm{a}  = \lambda\bm{a} 
+\end{eqnarray}
+を導き出すことができる。
+これは分散共分散行列$S$の固有値が$\lambda$、固有ベクトルが$\bm{a}$といっていることにほかならない。
+
+これらを用いると、求めたい軸の分散は
+\begin{eqnarray}
+  \mathrm{var}(X\bm{a}) = \bm{a}^\mathrm{T} S \bm{a} =  \bm{a}^\mathrm{T} \lambda \bm{a}  = \lambda~~(\because a^Ta=1)
+\end{eqnarray}
+となる。
+つまり分散の最大値は、$S$の固有値の中で最も大きいものを選んでこればよく、その最大化を実現する$\bm{a}$は対応する固有ベクトルである。
+以上の前提があるため、PCAを学ぶときには、共分散行列と固有値分解が必須となるのである。
+また、最大の他に、2番目に分散を大きくする軸にも興味があれば、単に2番目に大きい固有値と対応する固有ベクトルを選択すればよいのである。
