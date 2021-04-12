@@ -1,0 +1,136 @@
+
+\chapter{線形代数}
+
+\section{行列の固有値}
+
+\begin{screen}
+  正方行列Aに対して、
+  \begin{equation}
+    A\bm{v} = \lambda\bm{v}
+  \end{equation}
+  を満たすベクトル$\bm{v}$が存在するとき（$\bm{v}\neq 0$）、
+  $\lambda$を$A$の固有値という。
+  また$\bm{v}$を固有値$\lambda$の固有ベクトルという。
+\end{screen}
+
+通常は行列を掛けると、全く別のベクトルになるはず（回転、拡大縮小）であるが、
+とあるベクトルは回転せず拡大縮小のみの変化しか受けないということ。
+
+\subsection{固有方程式}
+
+\begin{eqnarray*}
+  A\bm{v} = \lambda \bm{v} \\ 
+  \Leftrightarrow (A-\lambda)\bm{v} = 0  \\
+  \Leftrightarrow 
+    \left(
+      \begin{array}{cc}
+        a-\lambda & b  \\
+        c & d -\lambda
+      \end{array}
+    \right)
+  \bm{v} = 0
+\end{eqnarray*}
+
+もし$A-\lambda$が正則であれば\footnote{正則...逆行列を持つこと}、$A^{-1}$を左から掛けることで$\bm{v}=0$となるが、
+これは仮定に反する。
+つまり、$A-\lambda$は正則であってはならず、行列式は0である必要がある。
+ここから固有方程式と呼ばれる方程式を導くことができる。
+
+\begin{eqnarray*}
+  \det (A-\lambda) = 0 \\
+  \Leftrightarrow (a-\lambda)(d-\lambda)-bc = 0 \\
+  \Leftrightarrow \lambda^2 -(a+d)\lambda -bc = 0 
+\end{eqnarray*}
+この固有方程式を解くことで、固有値を求めることができる。
+
+\section{ランク}
+
+\section{各種計算}
+
+\section{分散共分散行列}
+
+観測データを行列表示することを考え、$n\times p$の行列$X$を考える。
+\begin{eqnarray}
+  X &=&
+  \overbrace{
+    \left(
+  \begin{array}{cccc}
+    x_1^{(1)} & x_2^{(1)} & \dots & x_p^{(1)} \\
+    x_1^{(2)} & x_2^{(2)} & \dots & x_p^{(2)} \\
+    x_1^{(3)} & x_2^{(3)} & \dots & x_p^{(3)} \\
+    \vdots    & \vdots    & \dots & \vdots    \\
+    x_1^{(n)} & x_2^{(n)} & \dots & x_p^{(n)} \\
+  \end{array}
+  \right)}^{p次元 ~=~ p個の変数} \\
+  &=& (\bm{x_1}~~\bm{x_2}~~\dots~~\bm{x_p})
+\end{eqnarray}
+$n$はデータ数に相当し、$p$は測定した変数の個数(=次元）に相当する。
+ここで次元とは、例えば身長と体重の2種類を測定したなら2次元のデータ、加えて年齢を測定したなら3次元のデータ、というくらいの意味合いのものである。
+また最後の式変形では、列ベクトル（縦ベクトル）を用いて簡略化している。
+
+各変数ごとに平均を計算し、それをまとめたものを$\overline{X}$とすると
+\begin{eqnarray}
+  X - \overline{X} &=& 
+    \left(
+  \begin{array}{cccc}
+    x_1^{(1)} & x_2^{(1)} & \dots & x_p^{(1)} \\
+    x_1^{(2)} & x_2^{(2)} & \dots & x_p^{(2)} \\
+    x_1^{(3)} & x_2^{(3)} & \dots & x_p^{(3)} \\
+    \vdots    & \vdots    & \dots & \vdots    \\
+    x_1^{(n)} & x_2^{(n)} & \dots & x_p^{(n)} \\
+  \end{array}
+  \right) 
+  - 
+  \left(
+  \begin{array}{cccc}
+    \mu_1 & \mu_2 & \dots & \mu_p \\
+    \mu_1 & \mu_2 & \dots & \mu_p \\
+    \mu_1 & \mu_2 & \dots & \mu_p \\
+    \vdots    & \vdots    & \dots & \vdots    \\
+    \mu_1 & \mu_2 & \dots & \mu_p \\
+  \end{array} 
+  \right)\\
+  &=&
+    \left(
+  \begin{array}{cccc}
+    x_1^{(1)}-\mu_1 & x_2^{(1)} -\mu_2 & \dots & x_p^{(1)} -\mu_p \\
+    x_1^{(2)}-\mu_1 & x_2^{(2)} -\mu_2 & \dots & x_p^{(2)} -\mu_p \\
+    x_1^{(3)}-\mu_1 & x_2^{(3)} -\mu_2 & \dots & x_p^{(3)} -\mu_p \\
+    \vdots          & \vdots           & \dots & \vdots     \\
+    x_1^{(n)}-\mu_1 & x_2^{(n)} -\mu_2 & \dots & x_p^{(n)} -\mu_p \\
+  \end{array}
+  \right) \\
+  &=& 
+  (\bm{x_1}-\overline{\bm{x_1}}~~\bm{x_2}-\overline{\bm{x_1}}~~\dots~~\bm{x_p-\overline{\bm{x_p}}})
+\end{eqnarray}
+ここで、$\overline{\bm{x}}=(\mu~~\mu~~\dots~~\mu)^{\mathrm{T}}$を表している。
+このまま（少し汚いが）計算を進めると分散共分散行列に行き着くので、もう少し頑張ってみる。
+
+\begin{eqnarray}
+  (X-\overline{X})^\mathrm{T}(X-\overline{X}) &=& 
+    \left(
+  \begin{array}{c}
+    (\bm{x_1}-\overline{\bm{x_1}})^\mathrm{T} \\
+    (\bm{x_2}-\overline{\bm{x_2}})^\mathrm{T} \\
+    \vdots \\
+    (\bm{x_p}-\overline{\bm{x_p}})^\mathrm{T} \\
+  \end{array}
+  \right) 
+  (\bm{x_1}-\overline{\bm{x_1}}~~\bm{x_2}-\overline{\bm{x_1}}~~\dots~~\bm{x_p-\overline{\bm{x_p}}})\\
+  &=&
+    \left(
+  \begin{array}{cccc}
+    (\bm{x_1}-\overline{\bm{x_1}})^\mathrm{T}(\bm{x_1}-\overline{\bm{x_1}}) & (\bm{x_1}-\overline{\bm{x_1}})^\mathrm{T}(\bm{x_2}-\overline{\bm{x_2}}) & \dots & (\bm{x_1}-\overline{\bm{x_1}})^\mathrm{T}(\bm{x_p}-\overline{\bm{x_p}}) \\
+    (\bm{x_2}-\overline{\bm{x_2}})^\mathrm{T}(\bm{x_1}-\overline{\bm{x_1}}) & (\bm{x_2}-\overline{\bm{x_2}})^\mathrm{T}(\bm{x_2}-\overline{\bm{x_2}}) & \dots & (\bm{x_2}-\overline{\bm{x_2}})^\mathrm{T}(\bm{x_p}-\overline{\bm{x_p}}) \\
+    \vdots    & \vdots    & \dots & \vdots    \\
+    (\bm{x_p}-\overline{\bm{x_p}})^\mathrm{T}(\bm{x_1}-\overline{\bm{x_1}}) & (\bm{x_p}-\overline{\bm{x_p}})^\mathrm{T}(\bm{x_2}-\overline{\bm{x_2}}) & \dots & (\bm{x_p}-\overline{\bm{x_p}})^\mathrm{T}(\bm{x_p}-\overline{\bm{x_p}}) \\
+  \end{array}
+  \right) \\
+  &=& nS
+\end{eqnarray}
+分散共分散行列$S$\footnote{英語ではcovariance matrixなので、cov(X)と表したりする。}は$p\times p$行列であり、
+まとめると次のように表すことができる。
+\begin{equation}
+  \mathrm{cov}(X) = \frac{1}{n} \left( X-\overline{X} \right)^\mathrm{T} \left( X-\overline{X} \right)
+\end{equation}
+分散共分散行列とはその名の通り、データの分散と共分散の情報を持つ正方行列である。
